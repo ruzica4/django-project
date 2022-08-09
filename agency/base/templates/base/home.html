@@ -1,0 +1,60 @@
+{% extends 'main.html' %}
+
+{% block content %}
+<style>
+    .home-container{
+    display: grid;
+    grid-template-columns: 3fr 3fr 3fr;
+    }
+
+
+</style>
+
+<div class="home-container">
+    <div>
+        <h3>Upcoming arrangements</h3>
+        <hr>
+        {% for arr_5 in arrangements_5_days %}
+        <div>
+            <a href="{% url 'arrangement' arr_5.id %}">{{arr_5.arrangement_start_time}} - {{arr_5.place}}</a>
+        </div>
+        {% endfor %}
+
+    </div>
+    <div>
+        <h3>All arrangements so far </h3>
+        <hr>
+        {% if request.user.user_type == 'AGENCY' %}
+        <a href="{% url 'create-arrangement' %}">Create arrangement</a>
+        {% endif %}
+        <div>
+            <br>
+            {% for arr in arrangements %}
+            <div>
+                <a href="{% url 'arrangement' arr.id %}">{{arr.arrangement_start_time}} - {{arr.place}}</a>
+                {% if request.user.user_type == 'AGENCY' %}
+                <a href="{% url 'update-arrangement' arr.id %}"> Edit </a>
+                <a href="{% url 'delete-arrangement' arr.id %}"> Delete </a>
+                {% endif %}
+                <!--                <span> @{{arr.place}} </span>-->
+                <!--                <h5>{{arr.id}} &#45;&#45; <a href='{% url "arrangement" arr.id %}'> {{arr.place}}</a></h5>-->
+
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div>
+        {% if request.user.user_type == 'TOURIST' %}
+        <h3> Reserved arrangements </h3>
+        <hr>
+        {% for arr in my_past_arrangements %}
+        <div>
+            <a href="{% url 'arrangement' arr.id %}">{{arr.arrangement_start_time}} - {{arr.place}}</a>
+        </div>
+        {% endfor %}
+        {% endif %}
+    </div>
+
+
+</div>
+{% endblock content %}

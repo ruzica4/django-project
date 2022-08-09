@@ -1,0 +1,56 @@
+{% extends 'main.html' %}
+
+{% block content %}
+<style>
+.arrangement-container {
+    display: grid;
+    grid-template-columns: 3fr 1fr;
+}
+
+
+</style>
+<div class="arrangement-container">
+    <div>
+        <h1>Place of the arrangement: {{arrangement.place}}</h1>
+        <p>Description:{{arrangement.description}}</p>
+
+        {% if request.user.is_authenticated %}
+        <p> Start date: {{arrangement.arrangement_start_time}}</p>
+        <p> End date: {{arrangement.arrangement_end_time}}</p>
+        <p> Price per person: {{arrangement.price_per_person}} euros </p>
+
+        {% if res == True %}
+        <div>
+            <a href="{% url 'reserve-arrangement' arrangement.id %}">Reserve a place for this trip</a>
+        </div>
+        {% else %}
+        {% if request.user.user_type == 'TOURIST' %}
+        <div>
+            <p>This arrangement can no longer be reserved</p>
+        </div>
+        {% endif %}
+        {% endif %}
+
+        {% if request.user.user_type == 'AGENCY' %}
+        <div>
+            <p>Users who have reserved this arrangement: </p>
+            {% for u in arrangement_tourists %}
+            <a href="">{{u}}</a>
+        </div>
+        {% endfor %}
+        {% endif %}
+        {% endif %}
+    </div>
+
+    {% if res == False %}
+    <div>
+        <h3>Image</h3>
+        <!--        <img src="{{ arrangement.image.url }}" alt="" style="width:500px;height:600px;">-->
+        <img
+                src="{{ arrangement.image.url }}" ,
+                sizes="(min-width: 400px) 400px, 100vw"
+                class="logo">
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
